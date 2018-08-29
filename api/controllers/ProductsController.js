@@ -15,10 +15,10 @@ module.exports = {
 
 			res.json(response);
 		})
-
 	},
+
 	//detail
-	detail: (req, res) =>{
+	detail: (req, res) => {
 		let sql = 'SELECT * FROM PRODUCTS WHERE ID = ?';
 		db.query(sql, [req.params.productId], (err, response) =>{
 			if (err) throw err;
@@ -27,15 +27,34 @@ module.exports = {
 		})
 	},
 
-	store: (req, res) =>{
+	store: (req, res) => {
 		let data = req.body;
-		let sql = 'INSERT INTO products SET ?';
-		console.log(data)
-		db.query(sql, [data], (err, response) => {
+		let sql = 'INSERT INTO products (name, size, color) values ?';
+		let arr = [];
+		if(data.colors && data.sizes){
+			arr = module.exports.createManyProduct(data);
+		} else {
+			arr.push(data);
+		}
+		console.log(arr)
+		db.query(sql, [arr], (err, response) => {
 			if(err) throw err
-
-			res.json({message: 'inset success'});
+			res.json({message: 'insert success'});
 		})
+	},
+
+	createManyProduct: (data) => {
+		let arrColor = data.colors || [];
+		let arrSize = data.sizes || [];
+		let arr = [];
+		// let sql = 'insert into products (name, size, color)	values ';
+		for (var i = 0;i< arrColor.length; i++){
+			for (var j = 0;j< arrSize.length; j++){
+				let sql = ["name", arrColor[i],arrSize[j]];
+				arr.push(sql);
+			}	
+		}
+		return arr;
 	},
 
 	update: (req, res) => {

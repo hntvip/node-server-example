@@ -4,7 +4,8 @@
   "description": "first test",
   "main": "webserver.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon --inspect server.js",
+    "debug": "nodemon server.js"
   },
   "author": "hntu",
   "license": "ISC",
